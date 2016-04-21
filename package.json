@@ -1,0 +1,26 @@
+{
+  "name": "esliveness",
+  "version": "0.0.1",
+  "description": "Liveness analysis for JavaScript based on Mozilla's Parser API AST.",
+  "main": "liveness.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian Pfretzschner",
+  "license": "MIT",
+  "dependencies": {
+    "deep-equal": "^1.0.1",
+    "es6-shim": "^0.35.0",
+    "escodegen": "^1.8.0",
+    "esgraph": "^0.2.2",
+    "esprima": "^2.7.2",
+    "estraverse": "^4.2.0",
+    "JS_WALA": "git://github.com/wala/JS_WALA.git"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0"
+  }
+}
