@@ -3,8 +3,20 @@ Variable liveness analysis for ECMAScript (JavaScript) based on Mozilla's Parser
 
 Compatible with https://github.com/estools
 
-Examples
---------
+## Usage
+
+```js
+// Create AST and control-flow graph
+var ast = esprima.parse(source);
+var cfg = esgraph(ast);
+
+var liveness = require('esliveness');
+
+liveness.compute(ast, cfg /* cfg is a optional parameter */);
+var sourceWithComments = liveness.format(ast, true);
+```
+
+## Examples
 
 do-while loop (test 03-loops-02.js):
 ```js
