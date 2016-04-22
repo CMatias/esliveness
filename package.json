@@ -9,6 +9,19 @@
   "scripts": {
     "test": "mocha"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pfarrer/esliveness.git"
+  },
+  "keywords": [
+    "javascript",
+    "ecmascript",
+    "static analysis",
+    "liveness",
+    "variable",
+    "Parser API",
+    "Mozilla"
+  ],
   "author": "Brian Pfretzschner",
   "license": "MIT",
   "dependencies": {
