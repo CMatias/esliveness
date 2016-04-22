@@ -1,8 +1,11 @@
 // Liveness: global, this
 // - Gen: global, this
 function (__global) {
+	// Liveness: __global
 	var tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
-	tmp9 = function(n) {
+	// Liveness: __global
+	// - Kill: tmp9
+	tmp9 = function (n) {
 		var tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26;
 		tmp11 = n;
 		tmp12 = 2;
@@ -31,9 +34,18 @@ function (__global) {
 	__global[tmp8] = tmp9;
 	tmp2 = 'console';
 	tmp0 = __global[tmp2];
+	// Liveness: __global, tmp0
+	// - Kill: tmp1
 	tmp1 = 'log';
+	// Liveness: __global, tmp0, tmp1
+	// - Kill: tmp5
 	tmp5 = 'fib';
+	// Liveness: __global, tmp0, tmp1, tmp5
+	// - Gen: __global, tmp5
+	// - Kill: tmp4
 	tmp4 = __global[tmp5];
+	// Liveness: tmp0, tmp1, tmp4
+	// - Kill: tmp6
 	tmp6 = 10;
 	// Liveness: tmp0, tmp1, tmp4, tmp6
 	// - Gen: tmp4, tmp6
