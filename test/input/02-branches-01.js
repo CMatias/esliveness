@@ -5,4 +5,4 @@ if (a != 0) {
 	b = 0;
 	c = false;
 }
-console.log(b, c);
+write(b, c);

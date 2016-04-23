@@ -1,21 +1,21 @@
-// Liveness: 
+// Liveness: write
 // - Kill: a, c
 var a = 1, b, c = true;
-if (// Liveness: a, c
+if (// Liveness: a, c, write
 	// - Gen: a
 	a != 0) {
-	// Liveness: a, c
+	// Liveness: a, c, write
 	// - Gen: a
 	// - Kill: b
 	b = 10 / a;
 } else {
-	// Liveness: 
+	// Liveness: write
 	// - Kill: b
 	b = 0;
-	// Liveness: b
+	// Liveness: b, write
 	// - Kill: c
 	c = false;
 }
-// Liveness: b, c
-// - Gen: b, c
-console.log(b, c);
+// Liveness: b, c, write
+// - Gen: b, c, write
+write(b, c);

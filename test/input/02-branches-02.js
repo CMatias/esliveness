@@ -5,4 +5,4 @@ if (a == 0) {
 } else {
 	b = 10 / a;
 }
-console.log(b, c);
+write(b, c);

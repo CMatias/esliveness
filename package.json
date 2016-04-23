@@ -1,6 +1,6 @@
 {
   "name": "esliveness",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Liveness analysis for JavaScript based on Mozilla's Parser API AST.",
   "main": "liveness.js",
   "directories": {
