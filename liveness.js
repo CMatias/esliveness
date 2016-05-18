@@ -6,6 +6,8 @@ var escodegen = require('escodegen');
 var deepEqual = require('deep-equal');
 
 function computeGen (astNode) {
+    console.log(astNode);
+
     switch (astNode.type) {
         case 'AssignmentExpression':
             return computeGen(astNode.right);
@@ -38,13 +40,16 @@ function computeGen (astNode) {
             astNode.arguments.map(computeGen).forEach(function (vars) {
                 vars.forEach(set.add.bind(set));
             });
-            computeGen(astNode.callee).forEach(set.add.bind(set));
+            //computeGen(astNode.callee).forEach(set.add.bind(set));
+            //Properties may interfere with surrounding scope.
+            computeGen(astNode.callee.object).forEach(set.add.bind(set));
             return Array.from(set);
 
         case 'MemberExpression':
             var set = new Set();
             computeGen(astNode.object).forEach(set.add.bind(set));
-            computeGen(astNode.property).forEach(set.add.bind(set));
+            //Properties may interfere with surrounding scope.
+            //computeGen(astNode.property).forEach(set.add.bind(set));
             return Array.from(set);
 
         case 'ThisExpression':
@@ -59,7 +64,11 @@ function computeGen (astNode) {
 
         case 'VariableDeclarator':
             if (astNode.init) {
-                return computeGen(astNode.init);
+                if (astNode.init.object) {
+                    return computeGen(astNode.init.object);
+                } else {
+                    return computeGen(astNode.init);
+                }
             } else {
                 return [];
             }
@@ -178,9 +187,6 @@ function compute (ast, cfg) {
             };
             flowNode.astNode.liveness.live = computeLive(flowNode);
 
-            //Check if var is Live
-            isLive = true;
-
             if (deepEqual(prevLiveness, flowNode.astNode.liveness)) {
                 return;
             } else {
@@ -195,6 +201,55 @@ function compute (ast, cfg) {
 }
 
 module.exports.compute = compute;
+
+function computeWithIdentifier (ast, identifierToSearch, cfg) {
+    if (!cfg) {
+        cfg = esgraph(ast);
+    }
+
+    var foundIdentifier = false;
+
+    if (typeof identifierToSearch !== 'string') {
+        console.error("Invalid identifier supplied");
+        identifierToSearch = null;
+    }
+
+    (function rec (flowNode) {
+        if (flowNode.type === undefined) {
+            var prevLiveness = flowNode.astNode.liveness;
+
+            flowNode.astNode.liveness = {
+                gen: computeGen(flowNode.astNode),
+                kill: computeKill(flowNode.astNode)
+            };
+            flowNode.astNode.liveness.live = computeLive(flowNode);
+
+            if (identifierToSearch && !foundIdentifier) {
+                var findRes = flowNode.astNode.liveness.live.find(function(elem) {
+                    return elem == identifierToSearch;
+                });
+
+                if (findRes) {
+                    foundIdentifier = true;
+                }
+            }
+
+            if (deepEqual(prevLiveness, flowNode.astNode.liveness)) {
+                return;
+            } else {
+                return flowNode.prev.slice().reverse().forEach(rec);
+            }
+        }
+        else {
+            return flowNode.prev.slice().reverse().forEach(rec);
+        }
+
+    })(cfg[1]); // cfg[1] is the exit node if the cfg
+
+    return foundIdentifier;
+}
+
+module.exports.computeWithIdentifier = computeWithIdentifier;
 
 function format (ast, detailed) {
     estraverse.traverse(ast, {

@@ -15,4 +15,6 @@ var obj = {
     c: 3
 };
 
-var t = obj.a;
+var t = obj.c;
+
+var y = obj.c.d;
