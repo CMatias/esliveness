@@ -67,7 +67,22 @@ function computeGen (astNode) {
         case 'NewExpression':
             return computeGen(astNode.callee);
 
+        case 'ObjectExpression':
+            var set = new Set();
+            astNode.properties.map(computeGen).forEach(function (vars) {
+                vars.forEach(set.add.bind(set));
+            });
+            return Array.from(set);
+
+        case 'Property':
+            if (astNode.value) {
+                return computeGen(astNode.value);
+            } else {
+                return [];
+            }
+
         case 'Literal':
+        case 'ArrayExpression':
             return [];
 
         case 'Identifier':
@@ -114,7 +129,7 @@ function computeKill (astNode) {
 
         case 'Identifier':
             return [astNode.name];
-        
+
         default:
             console.error('Unexpected type:', astNode.type, astNode);
             return [];

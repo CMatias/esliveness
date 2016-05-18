@@ -7,5 +7,5 @@ var source = fs.readFileSync(process.argv[2], 'utf-8');
 var ast = esprima.parse(source);
 
 liveness.compute(ast);
-ast = normalizer.normalize(ast);
+//ast = normalizer.normalize(ast);
 console.log(liveness.format(ast));
